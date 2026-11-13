@@ -18,7 +18,6 @@
     chromedriver
     ghostscript # Camelot
     tk # Camelot
-    git
   ];
 
   env.CHROMEDRIVER_PATH = "${pkgs.chromedriver}/bin/chromedriver";
