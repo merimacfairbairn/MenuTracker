@@ -1,1 +1,3 @@
-web_browser_path = 'C://Users//yh459//OneDrive - University of Cambridge//MenuTracker//MenuTracker//chromedriver.exe'
+import os
+
+web_browser_path = os.getenv("CHROMEDRIVER_PATH")
