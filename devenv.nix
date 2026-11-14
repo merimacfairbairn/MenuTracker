@@ -1,7 +1,7 @@
 {pkgs, ...}: {
   languages.python = {
     enable = true;
-    version = "3.11";
+    version = "3.10";
     venv.enable = true;
     venv.requirements = ./requirements.txt;
   };
