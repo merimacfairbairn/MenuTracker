@@ -18,9 +18,9 @@ from selenium.webdriver.common.by import By
 from define_collection_wave import folder
 import platform
 
-# Define paths 
-root_path = 'C://Users//yh459//OneDrive - University of Cambridge//MenuTracker//MenuTracker'
-web_browser_path = os.path.join(root_path, 'chromedriver.exe')
+# Define paths
+root_path = './'
+web_browser_path = os.environ["CHROME_BIN"]
 
 
 # windows or osx
@@ -98,9 +98,9 @@ def combo_PDFDownload(rest_name, url, keyword='pdf', prex=None, verify=True):
             url_link = prex + url_link
         filename = url_link.split('/')[-1]
         if filename[-3:] != 'pdf':
-            if '.pdf' in filename: 
+            if '.pdf' in filename:
                 filename = filename.split('?')[0]
-            else: 
+            else:
                 filename = filename + '.pdf'
         filename = filename.replace(':', '')
         filename = filename.replace('?','')
@@ -135,10 +135,10 @@ def java_PDF(rest_name, url, prex=None, link_=True, xpath_=None):
             url_link = prex + url_link
         filename = url_link.split('/')[-1]
         if filename[-3:] != 'pdf':
-            if '.pdf' in filename: 
+            if '.pdf' in filename:
                 filename = filename.split('?')[0]
                 print(filename)
-            else: 
+            else:
                 filename = filename + '.pdf'
         filePath = os.path.join(path,  filename) # path to save the PDF file
         print(url_link)
@@ -181,7 +181,7 @@ def RunSpider(spidername, folder, json_=False):
     os.chdir(root_path)
     path = create_folder(spidername, folder) # create a folder for the spider output
     os.chdir('./Scrapy_spiders')
-    if op_sys == 'Windows': 
+    if op_sys == 'Windows':
         if json_:
             json_file_name = spidername + '_items.json'
             json_file_path = os.path.join(path, json_file_name)
@@ -194,7 +194,7 @@ def RunSpider(spidername, folder, json_=False):
             csv_file_name = spidername + '_items.csv'
             csv_file_path = os.path.join(path, csv_file_name)
             os.system("scrapy crawl " + spidername + " -o ..\\" + csv_file_path)
-    else: 
+    else:
         if json_:
             json_file_name = spidername + '_items.json'
             json_file_path_root = os.path.join(root_path, path, json_file_name)
@@ -221,7 +221,7 @@ def RunScript(rest_name):
 # Downloading PDF for Greene King companies
 def greene_king_download(rest_name, id, url, folder):
     path = create_folder(rest_name, folder)
-    # graphsql 
+    # graphsql
     request_url ='https://menufinder.greeneking-pubs.co.uk/graphql'
     query_string = "query Menus($venueId: String!) {\n  menus(venueId: $venueId) {\n    id\n    name\n    slug\n    description\n    image\n  }\n}\n"
     payload = {"operationName":"Menus","variables":{"venueId":id},"query":query_string}
@@ -230,7 +230,7 @@ def greene_king_download(rest_name, id, url, folder):
         menu_name = menu.get('name')
         print(menu_name + 'Downloading ---->')
         menu_id = menu.get('id')
-        # now another post request to get the download link 
+        # now another post request to get the download link
         query_string_menu = {"operationName":"MenuPages","variables":{"venueId":id,"menuId":menu_id},"query":"query MenuPages($venueId: String!, $menuId: Int!) {\n  menuPages(venueId: $venueId, menuId: $menuId) {\n    id\n    name\n    downloads {\n      download\n      allergens\n      nutrition\n    }\n    keywords {\n      id\n      name\n      icon\n    }\n    displayGroups {\n      id\n      name\n      groupHeader\n      groupFooter\n      products {\n        id\n        name\n        description\n        new\n        showPrices\n        keywords\n        portions {\n          id\n          name\n          portionName\n          abbreviation\n          price\n        }\n      }\n    }\n  }\n}\n"}
         menu_urls = requests.post(request_url, headers= headers, json = query_string_menu).json().get('data').get('menuPages').get('downloads')
         for value in menu_urls.values():
