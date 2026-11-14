@@ -1,13 +1,9 @@
-{
-  pkgs,
-  lib,
-  ...
-}: {
+{pkgs, ...}: {
   languages.python = {
     enable = true;
     version = "3.11";
     venv.enable = true;
-    venv.requirements = builtins.readFile ./requirements.txt; # verify exact filename
+    venv.requirements = ./requirements.txt;
   };
 
   # Optional: R for the cleaning step
